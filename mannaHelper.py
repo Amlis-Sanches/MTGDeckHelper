@@ -6,12 +6,13 @@ import sys
 def main():
     YN = input("For a new deck? Y or N: ").strip().lower()
     if YN == "y":
-        deck_name = input("What is the deck name: ")
+        deck_name = input("What is the deck name: ").strip()
         deck_size, color_list, land_count, deck_spells = deck_info()
         #save general deck information to a text file
         file = open(deck_name+".txt", "w")
         file.write(f"deck_size {deck_size}\n")
         file.write(f"color_list: {', '.join(color_list)}\n")
+        file.write(f"color_list: {', '.join(land_count)}\n")
 
         #save the df to a cvs file
         deck_spells.to_csv(deck_name+'.cvs',index=False)
@@ -33,22 +34,26 @@ def check_num(string=""):
 
 def check_mana(user_input):
     #take the users input and seporate the colors and form a list. 
-    mana_types = user_input.lower().strip().split(',')
+    mana_types = user_input.lower().replace(' ','').split(',')
 
     #check and make sure that all the values in the list are valid. 
-    for mana in mana_types: 
+    for mana in mana_types:
         match mana:
-            case "black"|"blue"|"white"|"green"|"red":
-                check = True
-            case "w"|"u"|"b"|"g"|"r":
-                check = True
-            case "exit":
+            case "black"|"blue"|"white"|"green"|"red": #check if mana is spelled this way.
+                check = True #set check to true but don't return yet
+            case "wh"|"bl"|"bk"|"gr"|"rd": #check if mana is spelled this way.
+                check = True #set check to true but don't return yet
+            case "w"|"u"|"b"|"g"|"r": #check if mana is spelled this way.
+                check = True #set check to true but don't return yet
+            case "exit": #If wanting to exit the program. 
                 sys.exit()
             case _ : # if value isn't valid return false: 
                 return False
-    if check == True: 
+    if check == True: #Once all values have been checked return the mana list. 
         mana_types.append("colorless")
         return mana_types
+    else:
+        print("Error: values not accepted.")
 
 def deck_info():
     #get the size of the deck they will be making. 
@@ -88,35 +93,17 @@ def deck_info():
         
     return deck_size, color_list, land_count, deck_spell_df
     
-
-    
-
-    
-    
-
-    
-
+def deck_land_stats(deck_size, land_count):
+    #land stats:
+    for mana in land_count: #sum all land inputted
+        all_land = land_count[mana] + all_land
+    percent_land = (deck_size/all_land)*100
+    print(f"The percent of land in your deck is {percent_land}%. The standard is 40% land per deck")
 
 
-
-
-'''
-# Calculate Mana Requirements:
-- Analyze card_data to determine the proportion of each mana type.
-- Use statistical methods (like probability calculations) to estimate the optimal number of each land type needed.
-'''
 def probability_count(deck_size, lands, turns = '7', lands_needed = '1'):
     # Calculate the probability of drawing number of lands needed in how many turns
     prob = hypergeom.pmf(lands_needed, deck_size, lands, turns)
-
-'''
-# Save to File:
-- Provide an option to save the results in a CSV or text file.
-- Use Python's csv module or file handling methods to write the data to a file.
-'''
-def save_info():
-    pass
-
 
 if __name__ == '__main__':
     main()
