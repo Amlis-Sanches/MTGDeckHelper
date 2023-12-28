@@ -17,6 +17,7 @@ def main():
         deck_spells.to_csv(deck_name+'.cvs',index=False)
 
     elif YN == "n":
+        print("Not currently avalible. Sorry")
         pass
     else:
         print("Not an option, Exiting the program")
