@@ -1,0 +1,4 @@
+deck_size:130
+color_list:blue, red, colorless
+land_count:Mana, Count, percent_of_deck, probability
+percent_land:41.53846153846154

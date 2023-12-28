@@ -81,7 +81,8 @@ def deck_info():
         'black': [],
         'green': [],
         'red': [],
-        'collorless': []
+        'collorless': [],
+        'Total Mana': []
     }
     deck_spell_df = pd.DataFrame(data_outline)
     while True:
@@ -92,6 +93,8 @@ def deck_info():
         new_row = {'Card Name': card_name, 'Copies': copies}
         for mana in color_list:
             new_row[mana] = check_num(f"how many {mana} does this card take? ")
+            total_mana += new_row[mana]
+        new_row['Total Mana'] = total_mana
         deck_spell_df = deck_spell_df._append(new_row, ignore_index=True)
         
     return deck_size, color_list, land_count, deck_spell_df
@@ -118,9 +121,8 @@ def deck_land_stats(deck_size, land_count):
 
     return land_count_df, percent_land
 
-def probability_count(deck_size, lands, turns = '7', lands_needed = '1'):
-    # Calculate the probability of drawing number of lands needed in how many turns
-    prob = hypergeom.pmf(lands_needed, deck_size, lands, turns)
+def deck_spell_stats():
+    pass
 
 if __name__ == '__main__':
     main()
