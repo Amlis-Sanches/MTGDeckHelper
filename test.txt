@@ -1,0 +1,3 @@
+deck_size 60
+color_list ['blue', 'black', 'red', 'colorless']
+color_list: blue, black, red, colorless

@@ -8,6 +8,14 @@ def main():
     if YN == "y":
         deck_name = input("What is the deck name: ")
         deck_size, color_list, land_count, deck_spells = deck_info()
+        #save general deck information to a text file
+        file = open(deck_name+".txt", "w")
+        file.write(f"deck_size {deck_size}\n")
+        file.write(f"color_list: {', '.join(color_list)}\n")
+
+        #save the df to a cvs file
+        deck_spells.to_csv(deck_name+'.cvs',index=False)
+
     elif YN == "n":
         pass
     else:
@@ -75,7 +83,7 @@ def deck_info():
         new_row = {'Card Name': card_name, 'Copies': copies}
         for mana in color_list:
             new_row[mana] = check_num(f"how many {mana} does this card take? ")
-        deck_spell_df = deck_spell_df.append(new_row, ignore_index=True)
+        deck_spell_df = deck_spell_df._append(new_row, ignore_index=True)
         
     return deck_size, color_list, land_count, deck_spell_df
     
