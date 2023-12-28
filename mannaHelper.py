@@ -97,24 +97,26 @@ def deck_info():
     return deck_size, color_list, land_count, deck_spell_df
     
 def deck_land_stats(deck_size, land_count):
-    #land stats:
-    all_land = 0
-    for mana in land_count: #sum all land inputted
-        all_land = land_count[mana] + all_land
-        if mana not in land_count:
-            land_count[mana] = {}
-        land_count[mana][1] = land_count[mana]/deck_size
-        num_of_lands = land_count[mana][0]
-        land_count[mana][2] = hypergeom.pmf(1, deck_size, num_of_lands, 7)
-    percent_land = (deck_size/all_land)*100
+    # Assuming land_count is a dictionary where the key is the mana type
+    # and the value is the count of that land type
+    all_land = sum(land_count.values())  # Sum all land inputted
+    
+    # Convert land_count to a DataFrame
+    land_count_df = pd.DataFrame(land_count.items(), columns=['Mana', 'Count'])
+
+    # Calculate percent_of_deck and probability for each mana type
+    land_count_df['percent_of_deck'] = (land_count_df['Count'] / deck_size) * 100
+    land_count_df['probability'] = (hypergeom.pmf(1, deck_size, land_count_df['Count'], 7))*100
+    
+    percent_land = (all_land / deck_size) * 100
 
     #print values
-    print(f"The percent of land in your deck is {percent_land}%. The standard is 40% land per deck")
-    for mana in land_count:
-        print(f"The percent of {mana} mana in your deck is {land_count[1, mana]}")
-        print(f"The probability of you picking up a {mana} mana at the start is {land_count[2, mana]}")
+    print(f"Your mana is {all_land}% of your deck. It's recommended 40% land or {int(deck_size*.4)} cards.")
+    for index, row in land_count_df.iterrows():
+        print(f"The percent of {row['Mana']} mana in your deck is {int(row['percent_of_deck'])}%")
+        print(f"The probability of you picking up a {row['Mana']} mana at the start is {int(row['probability'])}%")
 
-    return land_count, percent_land
+    return land_count_df, percent_land
 
 def probability_count(deck_size, lands, turns = '7', lands_needed = '1'):
     # Calculate the probability of drawing number of lands needed in how many turns
