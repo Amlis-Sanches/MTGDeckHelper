@@ -8,11 +8,14 @@ def main():
     if YN == "y":
         deck_name = input("What is the deck name: ").strip()
         deck_size, color_list, land_count, deck_spells = deck_info()
+        land_count, percent_land = deck_land_stats(deck_size, land_count)
+
         #save general deck information to a text file
         file = open(deck_name+".txt", "w")
-        file.write(f"deck_size {deck_size}\n")
-        file.write(f"color_list: {', '.join(color_list)}\n")
-        file.write(f"color_list: {', '.join(land_count)}\n")
+        file.write(f"deck_size:{deck_size}\n")
+        file.write(f"color_list:{', '.join(color_list)}\n")
+        file.write(f"land_count:{', '.join(land_count)}\n")
+        file.write(f"percent_land:{percent_land}\n")
 
         #save the df to a cvs file
         deck_spells.to_csv(deck_name+'.cvs',index=False)
@@ -95,11 +98,23 @@ def deck_info():
     
 def deck_land_stats(deck_size, land_count):
     #land stats:
+    all_land = 0
     for mana in land_count: #sum all land inputted
         all_land = land_count[mana] + all_land
+        if mana not in land_count:
+            land_count[mana] = {}
+        land_count[mana][1] = land_count[mana]/deck_size
+        num_of_lands = land_count[mana][0]
+        land_count[mana][2] = hypergeom.pmf(1, deck_size, num_of_lands, 7)
     percent_land = (deck_size/all_land)*100
-    print(f"The percent of land in your deck is {percent_land}%. The standard is 40% land per deck")
 
+    #print values
+    print(f"The percent of land in your deck is {percent_land}%. The standard is 40% land per deck")
+    for mana in land_count:
+        print(f"The percent of {mana} mana in your deck is {land_count[1, mana]}")
+        print(f"The probability of you picking up a {mana} mana at the start is {land_count[2, mana]}")
+
+    return land_count, percent_land
 
 def probability_count(deck_size, lands, turns = '7', lands_needed = '1'):
     # Calculate the probability of drawing number of lands needed in how many turns
