@@ -1,11 +1,4 @@
 '''
-
-'''
-def main():
-    deck_size, deck_type, card_data, land_data = deck_info()
-    manna_calc(deck_size, deck_type, card_data)
-
-'''
 # Define Variables:
 - deck_size: Integer, size of the deck. (60 for standard, 100 for commander or custom decks)
 - mana_types: List, types of mana (blue, black, red, white, green, clear).
@@ -19,24 +12,53 @@ def main():
 
 #import data
 from scipy.stats import hypergeom
+import pandas as pd
+import sys
 
 def main():
-    deck_size, deck_type, card_data, land_data = deck_info()
+    YN = input("For a new deck? Y or N: ")
+    if YN == "Y":
+        deck_name = input("What is the deck name: ")
+        deck_size, color_list, land_count, deck_spells = deck_info()
+    elif YN == "N":
+        pass
+    else:
+        print("Not an option, Exiting the program")
+        sys.exit()
 
+def check_num(string):
+        while True:
+            try:
+                num = int(input(string))
+                return num 
+            except ValueError:
+                print("Invalid input. Please enter a number.")
 
-def dic(user_input):
-    #takes a string and turns it into a dictionary
-    dic = {}
-    for i in user_input.split(','):
-        dic[i.split(':')[0]] = i.split(':')[1]
-    return dic
+def check_mana(user_input):
+    mana_types = user_input.lower().split(',')
+    for mana in mana_types: 
+        match mana:
+            case "black"|"blue"|"white"|"green"|"red":
+                check = True
+            case "w"|"u"|"b"|"g"|"r":
+                check = True
+            case _ :
+                check = False
+                return False
+    if check == True: 
+        return mana_types
 
 def deck_info():
-    deck_size = int(input("Enter the size of the deck: "))
-    deck_land = dic(input("Enter the color and number of lands in the deck: ")) #will give a dictionary
-    Turns = 7 + int(input("Enter the number of turns you want to calculate: "))
-    
-    card_details = input("Enter the card name, mana cost, and type: ") #will give a dictionary
+    #get the size of the deck they will be making. 
+    deck_size = check_num("What is your deck size? ")
+
+    while True:
+        color_list = check_mana(input("What mana types are in your deck? (separtate with ,) "))
+        if color_list
+
+
+
+
 
 '''
 # Calculate Mana Requirements:

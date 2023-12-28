@@ -1,0 +1,18 @@
+Main() loop
+    - ask if they are creating a new deck or reviewing existing. 
+    - if new:
+        - ask for deck name
+        - function(): get data from user and ensure it's the correct values and return:
+            - deck size Integer
+            - deck color list 
+            - deck land count dictionary
+            - deck card dataframe that stors the name, assigns a number to it, counts the mana
+            - save deck information
+    - if existing: 
+        - open file
+        - Assign values to:
+            - deck size Integer
+            - deck color list
+            - deck land count dictionary
+            - deck card dataframe that stors the name, assigns a number to it, counts the mana, counts the copies of the card
+
