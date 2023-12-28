@@ -1,32 +1,20 @@
-'''
-# Define Variables:
-- deck_size: Integer, size of the deck. (60 for standard, 100 for commander or custom decks)
-- mana_types: List, types of mana (blue, black, red, white, green, clear).
-- card_data: Dictionary or list to store mana cost and type for each card.
-
-# Input Deck Data:
-- Prompt user to input deck_size.
-- Prompt user to input the number of different mana types and their names.
-- For each card in the deck, input mana cost and type, storing it in card_data.
-'''
-
 #import data
 from scipy.stats import hypergeom
 import pandas as pd
 import sys
 
 def main():
-    YN = input("For a new deck? Y or N: ")
-    if YN == "Y":
+    YN = input("For a new deck? Y or N: ").strip().lower()
+    if YN == "y":
         deck_name = input("What is the deck name: ")
         deck_size, color_list, land_count, deck_spells = deck_info()
-    elif YN == "N":
+    elif YN == "n":
         pass
     else:
         print("Not an option, Exiting the program")
         sys.exit()
 
-def check_num(string):
+def check_num(string=""):
         while True:
             try:
                 num = int(input(string))
@@ -35,26 +23,69 @@ def check_num(string):
                 print("Invalid input. Please enter a number.")
 
 def check_mana(user_input):
-    mana_types = user_input.lower().split(',')
+    #take the users input and seporate the colors and form a list. 
+    mana_types = user_input.lower().strip().split(',')
+
+    #check and make sure that all the values in the list are valid. 
     for mana in mana_types: 
         match mana:
             case "black"|"blue"|"white"|"green"|"red":
                 check = True
             case "w"|"u"|"b"|"g"|"r":
                 check = True
-            case _ :
-                check = False
+            case "exit":
+                sys.exit()
+            case _ : # if value isn't valid return false: 
                 return False
     if check == True: 
+        mana_types.append("colorless")
         return mana_types
 
 def deck_info():
     #get the size of the deck they will be making. 
     deck_size = check_num("What is your deck size? ")
 
+    #get a list of colors from the user. 
     while True:
         color_list = check_mana(input("What mana types are in your deck? (separtate with ,) "))
-        if color_list
+        if color_list != False: 
+            break
+    #get a count of lands for each color
+    land_count = {}
+    for mana in color_list:
+        count = check_num(f"how many {mana} lands are there?")
+        land_count[mana] = count
+
+    data_outline = {
+        'Card Name': [],
+        'Copies': [],
+        'white': [],
+        'blue': [],
+        'black': [],
+        'green': [],
+        'red': [],
+        'collorless': []
+    }
+    deck_spell_df = pd.DataFrame(data_outline)
+    while True:
+        card_name = input("What's the name of the card or enter done: ").lower()
+        if card_name == "done":
+            break
+        copies = check_num("How many copies are there? ")
+        new_row = {'Card Name': card_name, 'Copies': copies}
+        for mana in color_list:
+            new_row[mana] = check_num(f"how many {mana} does this card take? ")
+        deck_spell_df = deck_spell_df.append(new_row, ignore_index=True)
+        
+    return deck_size, color_list, land_count, deck_spell_df
+    
+
+    
+
+    
+    
+
+    
 
 
 
