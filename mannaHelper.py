@@ -121,7 +121,9 @@ def deck_land_stats(deck_size, land_count):
 
     return land_count_df, percent_land
 
-def deck_spell_stats():
+def deck_spell_stats(spells_df, land_df, deck_size,turn = '10'):
+    for mana in land_df:
+        spell_df[f'{mana}Mana Probability in 10'] = (hypergeom.pmf(1, deck_size, land_count_df['Count'], 7))*100
     pass
 
 if __name__ == '__main__':
