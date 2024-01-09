@@ -23,8 +23,17 @@ def main():
         deck_spells.to_csv(deck_name+'.csv',index=False)
 
     elif deck_option == "n":
-        print("Not currently avalible. Sorry")
-        sys.exit()
+        deck_list = []
+        with open("deck_list.txt") as file:
+            for line in file:
+                deck_list.append(line.rstrip())
+        print("You have the following deck options: ")
+        i = 0
+        for deck in sorted(deck_list):
+            i += 1
+            print(deck,"| Deck number: ",i)
+        chosen_one = int(input("whitch deck do you want? choose a number: "))
+        deck_size, color_list, land_count, deck_spells = pull_info(deck_name[chosen_one])
 
     elif deck_option == "pull":
         while True:
