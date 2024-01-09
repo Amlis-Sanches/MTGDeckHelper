@@ -28,8 +28,8 @@ def main():
 
     elif deck_option == "pull":
         while True:
-            deck_name = input('What is the name of your deck file?:')
-            deck_size, color_list, land_count, deck_spells = pull_info(deck_name)
+            deck_name, opt1, opt2 = input('What is the name of your file?, do you have an info file?, do you have a csv? (Y or N):').lower().split(',')
+            deck_size, color_list, land_count, deck_spells = pull_info(deck_name, opt1, opt2)
             if deck_name == 'exit':
                 print('Exiting program')
                 sys.exit()
@@ -52,31 +52,36 @@ def check_num(string=""):
                 print("Invalid input. Please enter a number.")
 
 def pull_info(filename, info_file = 'y', card_list = 'y'):
-#    try:
-        #pull information from the text file
-        info = []
-        with open(filename+'.txt', "r") as file:
-            lines = file.readlines()
-        for line in lines:
-            colon_index = line.find(':')
-            # If there's a colon in the string
-            if colon_index != 1:
-                # Remove everything before the colon (and the colon itself)
-                line = line[colon_index + 1:]
-            info.append(line.strip())  # Add each line to the info list
-        deck_size = info[0]
-        color_list = info[1].split(',')
-        land_count = info[2].split(',')
+    try:
+        if info_file == 'y':
+            #pull information from the text file
+            info = []
+            with open(filename+'.txt', "r") as file:
+                lines = file.readlines()
+            for line in lines:
+                colon_index = line.find(':')
+                # If there's a colon in the string
+                if colon_index != 1:
+                    # Remove everything before the colon (and the colon itself)
+                    line = line[colon_index + 1:]
+                info.append(line.strip())  # Add each line to the info list
+            deck_size = info[0]
+            color_list = info[1].split(',')
+            land_count = info[2].split(',')
+        else:
+            deck_size, color_list, land_count = '',[],[]
 
-        #pull information from cvs file
-        deck_spells = pd.read_csv(filename+'.csv', index_col=0)
+        if card_list == 'y':
+            #pull information from cvs file
+            deck_spells = pd.read_csv(filename+'.csv', index_col=0)
+        else:
+            deck_spells = []
 
         return deck_size, color_list, land_count, deck_spells
-''' 
     except:
         print("Error: pull wasn't able to exicute")
         sys.exit()
-'''
+
 
 def check_mana(user_input):
     #take the users input and seporate the colors and form a list. 
