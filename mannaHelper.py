@@ -55,11 +55,22 @@ def check_num(string=""):
 
 def pull_info(filename):
     try:
-        
+        #pull information from the text file
+        info = []
+        with open(filename+'.txt', "r") as file:
+            lines = file.readlines()
+        for line in lines:
+            colon_index = line.find(':')
+            # If there's a colon in the string
+            if colon_index != -1:
+                # Remove everything before the colon (and the colon itself)
+                line = line[colon_index + 1:]
+            info.append(line.strip())  # Add each line to the info list
+
+        #pull information from cvs file
         return deck_size, color_list, land_count, deck_spells, data
     except:
-        deck_size, color_list, land_count, deck_spells, data = 'NAN'
-        return deck_size, color_list, land_count, deck_spells, data
+        return []
 
 
 def check_mana(user_input):
