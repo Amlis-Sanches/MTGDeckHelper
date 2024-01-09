@@ -20,7 +20,7 @@ def main():
         file.write(f"land_count:{', '.join(land_count)}\n")
 
         #save the df to a cvs file
-        deck_spells.to_csv(deck_name+'.cvs',index=False)
+        deck_spells.to_csv(deck_name+'.csv',index=False)
 
     elif deck_option == "n":
         print("Not currently avalible. Sorry")
@@ -33,14 +33,14 @@ def main():
             if deck_name == 'exit':
                 print('Exiting program')
                 sys.exit()
-            elif deck_size or color_list or land_count or deck_spells == 'NAN':
-                print("Error: file missing. Please ensure you have a CVS and TXT file")
             else:
                 break
 
     else:
         print("Not an option, Exiting the program")
         sys.exit()
+
+    print("Completed, stop here")
 
 
 def check_num(string=""):
@@ -52,7 +52,7 @@ def check_num(string=""):
                 print("Invalid input. Please enter a number.")
 
 def pull_info(filename, info_file = 'y', card_list = 'y'):
-    try:
+#    try:
         #pull information from the text file
         info = []
         with open(filename+'.txt', "r") as file:
@@ -72,9 +72,11 @@ def pull_info(filename, info_file = 'y', card_list = 'y'):
         deck_spells = pd.read_csv(filename+'.csv', index_col=0)
 
         return deck_size, color_list, land_count, deck_spells
+''' 
     except:
-        return []
-
+        print("Error: pull wasn't able to exicute")
+        sys.exit()
+'''
 
 def check_mana(user_input):
     #take the users input and seporate the colors and form a list. 
