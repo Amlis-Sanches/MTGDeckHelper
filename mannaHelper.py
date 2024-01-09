@@ -29,7 +29,7 @@ def main():
     elif deck_option == "pull":
         while True:
             deck_name = input('What is the name of your deck file?:')
-            deck_size, color_list, land_count, deck_spells, data = pull_info(deck_name)
+            deck_size, color_list, land_count, deck_spells = pull_info(deck_name)
             if deck_name == 'exit':
                 print('Exiting program')
                 sys.exit()
@@ -42,8 +42,6 @@ def main():
         print("Not an option, Exiting the program")
         sys.exit()
 
-    land_count, percent_land = deck_land_stats(deck_size, land_count)
-
 
 def check_num(string=""):
         while True:
@@ -53,7 +51,7 @@ def check_num(string=""):
             except ValueError:
                 print("Invalid input. Please enter a number.")
 
-def pull_info(filename):
+def pull_info(filename, info_file = 'y', card_list = 'y'):
     try:
         #pull information from the text file
         info = []
@@ -62,13 +60,18 @@ def pull_info(filename):
         for line in lines:
             colon_index = line.find(':')
             # If there's a colon in the string
-            if colon_index != -1:
+            if colon_index != 1:
                 # Remove everything before the colon (and the colon itself)
                 line = line[colon_index + 1:]
             info.append(line.strip())  # Add each line to the info list
+        deck_size = info[0]
+        color_list = info[1].split(',')
+        land_count = info[2].split(',')
 
         #pull information from cvs file
-        return deck_size, color_list, land_count, deck_spells, data
+        deck_spells = pd.read_csv(filename+'.csv', index_col=0)
+
+        return deck_size, color_list, land_count, deck_spells
     except:
         return []
 
