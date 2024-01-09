@@ -1,31 +1,49 @@
 #import data
 from scipy.stats import hypergeom
 import pandas as pd
-import sys
+import csv
+import sys, os
 
 def main():
-    YN = input("For a new deck? Y or N: ").strip().lower()
-    if YN == "y":
+    #prompt the user for how they are going to input their informaiton
+    deck_option = input("Are you creating a new deck Y, N, Pull?: ").strip().lower()
+
+    #If a new deck and not created, prompt the user for the amount of mana and each card. 
+    if deck_option == "y":
         deck_name = input("What is the deck name: ").strip()
         deck_size, color_list, land_count, deck_spells = deck_info()
-        land_count, percent_land = deck_land_stats(deck_size, land_count)
 
         #save general deck information to a text file
         file = open(deck_name+".txt", "w")
         file.write(f"deck_size:{deck_size}\n")
         file.write(f"color_list:{', '.join(color_list)}\n")
         file.write(f"land_count:{', '.join(land_count)}\n")
-        file.write(f"percent_land:{percent_land}\n")
 
         #save the df to a cvs file
         deck_spells.to_csv(deck_name+'.cvs',index=False)
 
-    elif YN == "n":
+    elif deck_option == "n":
         print("Not currently avalible. Sorry")
-        pass
+        sys.exit()
+
+    elif deck_option == "pull":
+        while True:
+            deck_name = input('What is the name of your deck file?:')
+            deck_size, color_list, land_count, deck_spells, data = pull_info(deck_name)
+            if deck_name == 'exit':
+                print('Exiting program')
+                sys.exit()
+            elif deck_size or color_list or land_count or deck_spells == 'NAN':
+                print("Error: file missing. Please ensure you have a CVS and TXT file")
+            else:
+                break
+
     else:
         print("Not an option, Exiting the program")
         sys.exit()
+
+    land_count, percent_land = deck_land_stats(deck_size, land_count)
+
 
 def check_num(string=""):
         while True:
@@ -34,6 +52,15 @@ def check_num(string=""):
                 return num 
             except ValueError:
                 print("Invalid input. Please enter a number.")
+
+def pull_info(filename):
+    try:
+        
+        return deck_size, color_list, land_count, deck_spells, data
+    except:
+        deck_size, color_list, land_count, deck_spells, data = 'NAN'
+        return deck_size, color_list, land_count, deck_spells, data
+
 
 def check_mana(user_input):
     #take the users input and seporate the colors and form a list. 
